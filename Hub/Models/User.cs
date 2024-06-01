@@ -3,12 +3,14 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using System.Data;
 using Hub.Data.Enum;
+using Microsoft.AspNetCore.Identity;
 
 namespace Hub.Models
 {
-    public class User
+    public class User:IdentityUser
     {
         [Key]
+        [Display(Name = "User ID")]
         public int UserId { get; set; }
 
         [Display(Name = "First name")]
@@ -24,12 +26,6 @@ namespace Hub.Models
         [DataType(DataType.Password)]
         [Required]
         public string Password { get; set; }
-
-        [ForeignKey("User")]
-        [Required]
-        public Role Role { get; set; }
-
-        public UserStatus Status { get; set; }
 
         public ICollection<Product> Products { get; set; }
     }

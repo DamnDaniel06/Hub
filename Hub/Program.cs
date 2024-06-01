@@ -1,4 +1,6 @@
 using Hub.Data;
+using Hub.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hub
@@ -15,6 +17,10 @@ namespace Hub
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+            builder.Services.AddIdentity<User,IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.Services.AddMemoryCache();
+            builder.Services.AddSession();
             var app = builder.Build();
 
             if(args.Length ==1 && args[0].ToLower() == "seeddata")

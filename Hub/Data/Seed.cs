@@ -18,25 +18,6 @@ namespace Hub.Data
                 context.Database.EnsureCreated();
 
                 //Users
-                if (!context.Roles.Any())
-                {
-                    context.Roles.AddRange(new List<Role>()
-                    {
-                        new Role()
-                        {
-                            role="Farmer"
-                         },
-                        new Role()
-                        {
-                            role="Employee"
-                        },
-                    });
-                    context.SaveChanges();
-                }
-                // Fetch the "Farmer" role
-                Role farmerRole = context.Roles.Single(r => r.role == "Farmer");
-                Role employeeRole = context.Roles.Single(r => r.role == "Employee");
-                //Users
                 if (!context.Users.Any())
                 {
                     context.Users.AddRange(new List<User>()
@@ -47,7 +28,6 @@ namespace Hub.Data
                             LastName="Cena",
                             Email="JCfarmer@gmail.com",
                             Password="password",
-                            Role=farmerRole
 
                          },
                         new User()
@@ -56,7 +36,6 @@ namespace Hub.Data
                             LastName="Wick",
                             Email="JWEmployee@gmail.com",
                             Password="superPass",
-                            Role=employeeRole,
 
                          }
                     }) ;
@@ -84,62 +63,56 @@ namespace Hub.Data
             }
         }
 
-        //public static async Task SeedUsersAndRolesAsync(IApplicationBuilder applicationBuilder)
-        //{
-        //    using (var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
-        //    {
-        //        //Roles
-        //        var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+        public static async Task SeedUsersAndRolesAsync(IApplicationBuilder applicationBuilder)
+        {
+            using (var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
 
-        //        if (!await roleManager.RoleExistsAsync(UserRoles.Admin))
-        //            await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
-        //        if (!await roleManager.RoleExistsAsync(UserRoles.User))
-        //            await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
+                //Roles
+                var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-        //        //Users
-        //        var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
-        //        string adminUserEmail = "teddysmithdeveloper@gmail.com";
+                if (!await roleManager.RoleExistsAsync(UserRoles.Employee))
+                    await roleManager.CreateAsync(new IdentityRole(UserRoles.Employee));
+                if (!await roleManager.RoleExistsAsync(UserRoles.Farmer))
+                    await roleManager.CreateAsync(new IdentityRole(UserRoles.Farmer));
 
-        //        var adminUser = await userManager.FindByEmailAsync(adminUserEmail);
-        //        if (adminUser == null)
-        //        {
-        //            var newAdminUser = new AppUser()
-        //            {
-        //                UserName = "teddysmithdev",
-        //                Email = adminUserEmail,
-        //                EmailConfirmed = true,
-        //                Address = new Address()
-        //                {
-        //                    Street = "123 Main St",
-        //                    City = "Charlotte",
-        //                    State = "NC"
-        //                }
-        //            };
-        //            await userManager.CreateAsync(newAdminUser, "Coding@1234?");
-        //            await userManager.AddToRoleAsync(newAdminUser, UserRoles.Admin);
-        //        }
+                //Users
+                var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<User>>();
+                string farmerUserEmail = "JCfarmer@gmail.com";
+                string password = "Coding@1234?";
 
-        //        string appUserEmail = "user@etickets.com";
+                var farmerUser = await userManager.FindByEmailAsync(farmerUserEmail);
+                if (farmerUser == null)
+                {
+                    var newFarmerUser = new User()
+                    {
+                        FirstName = "John",
+                        LastName = "Cena",
+                        Email = farmerUserEmail,
+                        Password = password,
+                    };
+                    await userManager.CreateAsync(newFarmerUser, password);
+                    await userManager.AddToRoleAsync(newFarmerUser, "Farmer");
+                }
 
-        //        var appUser = await userManager.FindByEmailAsync(appUserEmail);
-        //        if (appUser == null)
-        //        {
-        //            var newAppUser = new AppUser()
-        //            {
-        //                UserName = "app-user",
-        //                Email = appUserEmail,
-        //                EmailConfirmed = true,
-        //                Address = new Address()
-        //                {
-        //                    Street = "123 Main St",
-        //                    City = "Charlotte",
-        //                    State = "NC"
-        //                }
-        //            };
-        //            await userManager.CreateAsync(newAppUser, "Coding@1234?");
-        //            await userManager.AddToRoleAsync(newAppUser, UserRoles.User);
-        //        }
-        //    }
-        //}
+                string EmployeeUserEmail = "JWEmployee@gmail.com";
+                password = "passWord13!";
+
+                var employeeUser = await userManager.FindByEmailAsync(EmployeeUserEmail);
+                if (employeeUser == null)
+                {
+                    var newFarmerUser = new User()
+                    {
+                        FirstName = "John",
+                        LastName = "Wick",
+                        Email = farmerUserEmail,
+                        Password = password,
+                    };
+                    await userManager.CreateAsync(newFarmerUser, password);
+                    await userManager.AddToRoleAsync(newFarmerUser, "Employee");
+                }
+            }
+        }
     }
 }
