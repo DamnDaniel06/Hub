@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Hub.Data;
 using Hub.Models;
-using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace Hub.Controllers
 {
@@ -21,14 +21,12 @@ namespace Hub.Controllers
         }
 
         // GET: Products
-        [Authorize]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Products.ToListAsync());
         }
 
         // GET: Products/Details/5
-        [Authorize(Roles = "Farmer")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -47,7 +45,6 @@ namespace Hub.Controllers
         }
 
         // GET: Products/Create
-        [Authorize(Roles="Farmer")]
         public IActionResult Create()
         {
             return View();
@@ -58,11 +55,12 @@ namespace Hub.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles="Farmer")]
         public async Task<IActionResult> Create([Bind("ID,Name,Category,ProductionDate,UserId")] Product product)
         {
             if (ModelState.IsValid)
             {
+                string UserId =User.FindFirstValue(ClaimTypes.NameIdentifier);
+                product.UserId = UserId;
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -71,7 +69,6 @@ namespace Hub.Controllers
         }
 
         // GET: Products/Edit/5
-        [Authorize(Roles = "Farmer")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -92,7 +89,6 @@ namespace Hub.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Farmer")]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Category,ProductionDate,UserId")] Product product)
         {
             if (id != product.ID)
@@ -124,7 +120,6 @@ namespace Hub.Controllers
         }
 
         // GET: Products/Delete/5
-        [Authorize(Roles = "Farmer")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -145,7 +140,6 @@ namespace Hub.Controllers
         // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Farmer")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var product = await _context.Products.FindAsync(id);

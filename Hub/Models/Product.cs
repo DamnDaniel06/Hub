@@ -11,13 +11,27 @@ namespace Hub.Models
 
         public string Name { get; set; }
 
-        public ProductCategory Category { get; set; }
+        private ProductCategory category;
+        public string Category 
+        {
+            //get { return (ProductCategory)Enum.Parse(typeof(ProductCategory), category, true); }
+            //set { category = Category.ToString(); } 
+
+            get { return Category = category.ToString(); }
+            set { category = (ProductCategory)Enum.Parse(typeof(ProductCategory), value, true); }
+        }
+        
 
         [Display(Name = "Production Date")]
-        public DateTime ProductionDate { get; set; }
+        private DateTime productionDate;
+        public DateTime ProductionDate 
+        {
+            get { return productionDate; }
+            set { productionDate = DateTime.Now; } 
+        }
 
         [ForeignKey("User")]
         [Display(Name = "User ID")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
     }
 }

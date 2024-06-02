@@ -44,7 +44,7 @@ namespace Hub.Data
                 // Fetch Farmer John 
                 User farmerJohn = context.Users.Single(r => r.LastName== "Cena");
 
-                ProductCategory milk = ProductCategory.Diary;
+                var milk = nameof(ProductCategory.Diary);
                 //Products
                 if (!context.Products.Any())
                 {
@@ -54,8 +54,7 @@ namespace Hub.Data
                         {
                             Name="Milk",
                             Category=milk,
-                            ProductionDate=DateTime.Now,
-                            UserId=farmerJohn.UserId//>fetching UserId from Farmer John
+                            ProductionDate=DateTime.Now
                         }
                     });
                     context.SaveChanges();
@@ -79,39 +78,50 @@ namespace Hub.Data
 
                 //Users
                 var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<User>>();
-                string farmerUserEmail = "JCfarmer@gmail.com";
-                string password = "Coding@1234?";
 
-                var farmerUser = await userManager.FindByEmailAsync(farmerUserEmail);
-                if (farmerUser == null)
+                if (userManager != null)
                 {
-                    var newFarmerUser = new User()
-                    {
-                        FirstName = "John",
-                        LastName = "Cena",
-                        Email = farmerUserEmail,
-                        Password = password,
-                    };
-                    await userManager.CreateAsync(newFarmerUser, password);
-                    await userManager.AddToRoleAsync(newFarmerUser, "Farmer");
-                }
+                    string farmerUserEmail = "JCfarmer@gmail.com";
+                    string password = "Coding@1234?";
 
-                string EmployeeUserEmail = "JWEmployee@gmail.com";
-                password = "passWord13!";
-
-                var employeeUser = await userManager.FindByEmailAsync(EmployeeUserEmail);
-                if (employeeUser == null)
-                {
-                    var newFarmerUser = new User()
+                    var farmerUser = await userManager.FindByEmailAsync(farmerUserEmail);
+                    if (farmerUser == null)
                     {
-                        FirstName = "John",
-                        LastName = "Wick",
-                        Email = farmerUserEmail,
-                        Password = password,
-                    };
-                    await userManager.CreateAsync(newFarmerUser, password);
-                    await userManager.AddToRoleAsync(newFarmerUser, "Employee");
+                        var newFarmerUser = new User()
+                        {
+                            FirstName = "John",
+                            LastName = "Cena",
+                            Email = farmerUserEmail,
+                            Password = password,
+                        };
+                        await userManager.CreateAsync(newFarmerUser, password);
+                        await userManager.AddToRoleAsync(newFarmerUser, "Farmer");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Farmer not found");
+                    }
+
+                    string EmployeeUserEmail = "JWEmployee@gmail.com";
+                    password = "passWord13!";
+
+                    var employeeUser = await userManager.FindByEmailAsync(EmployeeUserEmail);
+                    if (employeeUser == null)
+                    {
+                        var newFarmerUser = new User()
+                        {
+                            FirstName = "John",
+                            LastName = "Wick",
+                            Email = farmerUserEmail,
+                            Password = password,
+                        };
+                        await userManager.CreateAsync(newFarmerUser, password);
+                        await userManager.AddToRoleAsync(newFarmerUser, "Employee");
+                    }
+
+
                 }
+                
             }
         }
     }

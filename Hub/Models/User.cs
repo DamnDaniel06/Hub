@@ -9,9 +9,6 @@ namespace Hub.Models
 {
     public class User:IdentityUser
     {
-        [Key]
-        [Display(Name = "User ID")]
-        public int UserId { get; set; }
 
         [Display(Name = "First name")]
         public string FirstName { get; set; }
@@ -27,6 +24,6 @@ namespace Hub.Models
         [Required]
         public string Password { get; set; }
 
-        public ICollection<Product> Products { get; set; }
+        public ICollection<Product> products { get ; set ; }
     }
 }

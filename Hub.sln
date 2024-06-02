@@ -5,6 +5,8 @@ VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hub", "Hub\Hub.csproj", "{A78BA25D-0410-452E-8B83-96AA5E303B12}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database-Hub", "Database-Hub\Database-Hub.csproj", "{7AF7EA64-E1BD-4BAC-877B-F19B86178117}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{A78BA25D-0410-452E-8B83-96AA5E303B12}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A78BA25D-0410-452E-8B83-96AA5E303B12}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A78BA25D-0410-452E-8B83-96AA5E303B12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AF7EA64-E1BD-4BAC-877B-F19B86178117}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AF7EA64-E1BD-4BAC-877B-F19B86178117}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AF7EA64-E1BD-4BAC-877B-F19B86178117}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AF7EA64-E1BD-4BAC-877B-F19B86178117}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
