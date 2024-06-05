@@ -18,7 +18,8 @@ namespace Hub
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
             builder.Services.AddIdentity<User,IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddRoles<IdentityRole>();
             builder.Services.AddMemoryCache();
             builder.Services.AddSession();
             var app = builder.Build();
