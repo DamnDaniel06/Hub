@@ -1,4 +1,5 @@
 ﻿using Hub.Data;
+using Hub.Data.Enum;
 using Hub.Models;
 using Hub.ViewModels;
 using Microsoft.AspNetCore.Identity;
@@ -74,6 +75,39 @@ namespace Hub.Controllers
             var response = new RegisterViewModel();
             return View(response);
         }
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
+        {
+            if (!ModelState.IsValid) return View(registerViewModel);
 
+            var user = await _userManager.FindByEmailAsync(registerViewModel.Email);
+
+            if (user != null)
+            {
+                TempData["Error"] = "This email address is already in user";
+                return View(registerViewModel);
+            }
+
+            var newUser = new User()
+            {
+                FirstName = registerViewModel.First,
+                LastName = registerViewModel.Last,
+                Email = registerViewModel.Email
+            };
+
+            var newUserResponse = await _userManager.CreateAsync(newUser,registerViewModel.Password);
+
+            if (newUserResponse.Succeeded)
+                await _userManager.AddToRoleAsync(newUser, UserRoles.Employee);
+
+            return View("Home");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index","User");
+        }
     }
 }
