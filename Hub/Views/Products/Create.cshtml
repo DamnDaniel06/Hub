@@ -1,4 +1,5 @@
-﻿@model Hub.Models.Product
+﻿@using Hub.Data.Enum
+@model Hub.Models.Product
 
 @{
     ViewData["Title"] = "Create";
@@ -19,7 +20,9 @@
             </div>
             <div class="form-group">
                 <label asp-for="Category" class="control-label"></label>
-                <select asp-for="Category" class="form-control"></select>
+                <select asp-for="Category" asp-items="Html.GetEnumSelectList<ProductCategory>()" class="form-control">
+                    <option value="">Choose category</option>
+                </select>
                 <span asp-validation-for="Category" class="text-danger"></span>
             </div>
             <div class="form-group">

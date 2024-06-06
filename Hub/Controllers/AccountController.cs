@@ -57,7 +57,7 @@ namespace Hub.Controllers
 
                         if (roleEmployee)
                         {
-                            return RedirectToAction("Index", "User");
+                            return RedirectToAction("Index", "Users");
                         }
                         
                     }
@@ -92,22 +92,30 @@ namespace Hub.Controllers
             {
                 FirstName = registerViewModel.First,
                 LastName = registerViewModel.Last,
-                Email = registerViewModel.Email
+                Email = registerViewModel.Email,
+                UserName = registerViewModel.UserName,
+                Password = registerViewModel.Password
             };
 
             var newUserResponse = await _userManager.CreateAsync(newUser,registerViewModel.Password);
 
-            if (newUserResponse.Succeeded)
+            if (!newUserResponse.Succeeded)
+            {
+                var error = newUserResponse.Errors;
+                return BadRequest(error);
+            }
+            else
+            {
                 await _userManager.AddToRoleAsync(newUser, UserRoles.Employee);
-
-            return View("Home");
+            }
+            return RedirectToAction("Index","Products");
         }
 
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index","User");
+            return RedirectToAction("Index","Home");
         }
     }
 }

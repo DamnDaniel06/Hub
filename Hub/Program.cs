@@ -7,7 +7,7 @@ namespace Hub
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -17,16 +17,30 @@ namespace Hub
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
-            builder.Services.AddIdentity<User,IdentityRole>()
+            builder.Services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddRoles<IdentityRole>();
+            builder.Services.Configure<IdentityOptions>(
+        options =>
+        {
+            options.User.AllowedUserNameCharacters =
+                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+
+            // Identity : Default password settings
+            options.Password.RequireDigit = true;
+            options.Password.RequireLowercase = true;
+            options.Password.RequireNonAlphanumeric = true;
+            options.Password.RequireUppercase = true;
+            options.Password.RequiredLength = 6;
+            options.Password.RequiredUniqueChars = 1;
+        });
             builder.Services.AddMemoryCache();
             builder.Services.AddSession();
             var app = builder.Build();
 
             if(args.Length ==1 && args[0].ToLower() == "seeddata")
             {
-                Seed.SeedUsersAndRolesAsync(app);
+                await Seed.SeedUsersAndRolesAsync(app);
                 //Seed.SeedData(app);
             }
 

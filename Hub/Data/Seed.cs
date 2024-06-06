@@ -91,11 +91,22 @@ namespace Hub.Data
                         {
                             FirstName = "John",
                             LastName = "Cena",
+                            UserName = "Mister Cena",
                             Email = farmerUserEmail,
                             Password = password,
                         };
-                        await userManager.CreateAsync(newFarmerUser, password);
-                        await userManager.AddToRoleAsync(newFarmerUser, "Farmer");
+                        var newUserResponse = await userManager.CreateAsync(newFarmerUser, password);
+
+                        if (!newUserResponse.Succeeded)
+                        {
+                            var error = newUserResponse.Errors;
+                            Console.WriteLine(error);
+                        }
+                        else
+                        {
+                            await userManager.AddToRoleAsync(newFarmerUser, UserRoles.Farmer);
+                        }
+
                     }
                     else
                     {
@@ -112,11 +123,12 @@ namespace Hub.Data
                         {
                             FirstName = "John",
                             LastName = "Wick",
+                            UserName = "Mister Wick",
                             Email = farmerUserEmail,
                             Password = password,
                         };
                         await userManager.CreateAsync(newFarmerUser, password);
-                        await userManager.AddToRoleAsync(newFarmerUser, "Employee");
+                        await userManager.AddToRoleAsync(newFarmerUser, UserRoles.Employee);
                     }
 
 
